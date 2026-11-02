@@ -1,3 +1,23 @@
+<p align="center">
+  <img src=".github/banner.jpg" alt="Addon Auditor — catch it before players do" width="100%">
+</p>
+
+<p align="center">
+  <b>A WoW addon auditor that AI coding agents call while they write code.</b><br>
+  Performance, usability, luacheck, TOC, API, taint and runtime checks — over a CLI or MCP, with no LLM keys.
+</p>
+
+<p align="center">
+  <a href="https://github.com/Terynas/addon-auditor/actions/workflows/ci.yml"><img src="https://github.com/Terynas/addon-auditor/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <img src="https://img.shields.io/badge/WoW-Forever%20%7C%20Classic%20Era%20%7C%20Midnight-d6a64a?style=flat-square" alt="WoW Forever, Classic Era and Midnight">
+  <img src="https://img.shields.io/badge/rules-87-d6a64a?style=flat-square" alt="87 rules">
+  <img src="https://img.shields.io/badge/python-3.11%2B-2c2d72?style=flat-square&logo=python&logoColor=white" alt="Python 3.11+">
+  <img src="https://img.shields.io/badge/MCP-server-2c2d72?style=flat-square" alt="MCP server">
+  <img src="https://img.shields.io/badge/license-MIT-6b6b6b?style=flat-square" alt="MIT license">
+</p>
+
+---
+
 # addon-auditor
 
 A deterministic auditor for World of Warcraft addons, built to be called by AI coding agents while they write code (and by humans and CI).

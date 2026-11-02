@@ -9,6 +9,7 @@ All notable changes to this project are documented here. Format: [Keep a Changel
 - Initial release of **addon-auditor**: a deterministic auditor for World of Warcraft addons built for AI coding agents. Supports WoW Forever, Classic Era, Classic and Mainline / Midnight, detected from TOC `## Interface`, per-client TOC suffixes and `AllowLoadGameType`.
 - Engine: built-in Lua 5.1 parser and scope resolver, TOC parser, ranked findings with severity, confidence and fix hints, per-category scores and a pass/fail gate, diff mode (git ref or file list), baselines, inline suppressions with mandatory reasons, and `.addon-auditor.toml` configuration.
 - Reports in Markdown, JSON and SARIF 2.1.0.
+- README banner and badges (`.github/banner.jpg`) matching the Terynas addon repos.
 - CLI `addon-auditor` with these commands: `audit`, `diff`, `explain`, `rules`, `api`, `baseline`, `learn`, `luacheckrc` (writes a compact per-addon `.luacheckrc`), `memory-hints` and `probe-ingest`.
 - Rule packs, 87 rules in all, each with a documentation page and good/bad fixtures:
   - **LINT001–LINT009**: luacheck integration, with a built-in accidental-global check when luacheck is not installed.
