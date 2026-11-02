@@ -1,0 +1,4 @@
+package-as: good
+
+externals:
+  Libs/LibStub: https://repos.wowace.com/wow/libstub/trunk

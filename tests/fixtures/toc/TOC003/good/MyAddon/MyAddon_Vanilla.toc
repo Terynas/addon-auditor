@@ -1,0 +1,6 @@
+## Interface: 11508
+## Title: MyAddon
+## Notes: n
+## Version: 1.0
+
+core.lua

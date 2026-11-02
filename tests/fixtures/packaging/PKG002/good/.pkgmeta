@@ -1,0 +1,4 @@
+package-as: good
+
+ignore:
+  - "*.psd"

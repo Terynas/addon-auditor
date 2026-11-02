@@ -1,0 +1,2 @@
+[thresholds]
+package_size_mb_warn = 0.0001

@@ -1,0 +1,8 @@
+## Interface: 16001, 120107
+## Title: Fixture
+## Notes: auditor fixture
+## Version: 1.0
+## IconTexture: Interface\Icons\INV_Misc_QuestionMark
+## Category: Utility
+
+core.lua
