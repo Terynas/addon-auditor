@@ -1,0 +1,10 @@
+## Interface: 11509, 16001, 120105, 120107
+## Title: AuditorProbe
+## Notes: Samples per-addon memory, CPU and event load for addon-auditor. /probe help
+## Author: Terynas
+## Version: 0.1.0
+## SavedVariables: AuditorProbeDB
+## IconTexture: Interface\Icons\INV_Misc_Spyglass_03
+## Category: Development Tools
+
+AuditorProbe.lua
