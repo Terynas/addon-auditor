@@ -1,0 +1,8 @@
+local btn = CreateFrame("Button", nil, UIParent, "UIPanelButtonTemplate")
+btn:SetSize(120, 24)
+btn:SetPoint("CENTER")
+btn:SetScript("OnEnter", function(self)
+    GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+    GameTooltip:AddLine("Click to refresh")
+    GameTooltip:Show()
+end)

@@ -1,0 +1,8 @@
+local f = CreateFrame("Frame", "FixtureDrag", UIParent)
+f:SetSize(200, 100)
+f:SetPoint("CENTER")
+f:SetMovable(true)
+f:SetClampedToScreen(true)
+f:EnableMouse(true)
+f:RegisterForDrag("LeftButton")
+f:SetScript("OnDragStart", f.StartMoving)
