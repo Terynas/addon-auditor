@@ -1,0 +1,5 @@
+local f = CreateFrame("Frame")
+f:SetScript("OnEvent", function(_, _, unit, _, spellID)
+  print(unit, spellID)
+end)
+f:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", "player")

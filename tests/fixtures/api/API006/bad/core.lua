@@ -1,0 +1,6 @@
+local f = CreateFrame("Frame")
+f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+f:SetScript("OnEvent", function()
+  local _, sub = CombatLogGetCurrentEventInfo()
+  print(sub)
+end)

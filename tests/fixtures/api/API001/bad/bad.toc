@@ -1,0 +1,6 @@
+## Interface: 16001, 120107
+## Title: Fixture
+## Notes: auditor fixture
+## Version: 1.0
+
+core.lua
