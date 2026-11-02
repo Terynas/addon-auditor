@@ -29,7 +29,7 @@ addon-auditor rules                              # every rule with severity and 
 addon-auditor api C_Container.GetContainerItemInfo   # does it exist on each client?
 addon-auditor luacheckrc MyAddon --write         # compact .luacheckrc tailored to the addon
 addon-auditor baseline MyAddon                   # accept current findings once (legacy adoption)
-addon-auditor learn MyAddon UX004 false_positive "frame is a fixed HUD, never moved"
+addon-auditor learn MyAddon UX004 false_positive "HUD frame is re-anchored to the screen on every login"
 ```
 
 Example output:
@@ -37,7 +37,7 @@ Example output:
 ```text
 # addon-auditor: MyAddon
 **Gate:** FAIL (fails on `error`) · **Score:** 71/100 · **Profiles:** forever, mainline
-- **ERROR** `API002` core.lua:41 — C_Container.GetItemInfoz does not exist on any targeted client
+- **ERROR** `API001` core.lua:41 — `C_Container.GetItemInfoz` does not exist on forever, mainline
 - **WARN** `PERF001` ui.lua:88 — OnUpdate handler runs every frame without a throttle
   - fix: self.t = (self.t or 0) + elapsed; if self.t < 0.1 then return end; self.t = 0
 ```
@@ -101,7 +101,7 @@ You can also suppress inline. A suppression without a reason is itself reported,
 
 ```lua
 frame:SetScript("OnUpdate", Tick) -- auditor:ignore PERF001 Tick self-throttles via its own timer
--- auditor:ignore-file UX010 developer-only debug window
+-- auditor:ignore-file UX010 developer build announces itself on purpose
 ```
 
 The `.addon-auditor/` folder in each addon holds `baseline.json` (accepted legacy findings) and `learnings.jsonl` (recorded verdicts).
