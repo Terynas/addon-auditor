@@ -186,7 +186,7 @@ def memory_high(ctx: AuditContext, emit: Emit) -> None:
 def memory_growth(ctx: AuditContext, emit: Emit) -> None:
     data = _stats(ctx)
     st = data and data["stats"]
-    if not st:
+    if not data or not st:
         return
     duration = float(data["session"].get("duration") or 0)
     rate = st["memory_growth_kb_per_min"]

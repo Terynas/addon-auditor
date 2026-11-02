@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install
+        run: |
+          uv venv
+          uv pip install -e ".[dev,mcp]"
+
+      - name: Install luacheck (Lua 5.1 via hererocks)
+        run: |
+          uv pip install hererocks
+          .venv/bin/hererocks "$HOME/lua51" --lua 5.1 --luarocks latest
+          "$HOME/lua51/bin/luarocks" install luacheck
+          echo "ADDON_AUDITOR_LUACHECK=$HOME/lua51/bin/luacheck" >> "$GITHUB_ENV"
+
+      - name: Ruff
+        run: .venv/bin/ruff check src tests scripts
+
+      - name: Mypy
+        run: .venv/bin/mypy
+
+      - name: Pytest
+        run: .venv/bin/python -m pytest -q
+
+      - name: Self-audit AuditorProbe
+        run: .venv/bin/addon-auditor audit probe/AuditorProbe --min-severity warn
+
+      - name: SARIF smoke test
+        run: .venv/bin/addon-auditor audit probe/AuditorProbe --format sarif -o probe.sarif && python -m json.tool probe.sarif > /dev/null

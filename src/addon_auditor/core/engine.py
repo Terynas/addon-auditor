@@ -212,8 +212,8 @@ def run_audit(path: Path, opts: AuditOptions | None = None, config: Config | Non
     kept: list[Finding] = []
     suppressed: list[dict[str, Any]] = []
     for f in findings:
-        lf = ctx.files.get(f.file) if f.file else None
-        s = suppress.find(lf.suppressions, f.rule_id, f.line, f.end_line) if lf else None
+        sup_file = ctx.files.get(f.file) if f.file else None
+        s = suppress.find(sup_file.suppressions, f.rule_id, f.line, f.end_line) if sup_file else None
         if s is not None:
             s.used = True
             suppressed.append({"rule_id": f.rule_id, "file": f.file, "line": f.line, "reason": s.reason})

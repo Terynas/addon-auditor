@@ -24,7 +24,7 @@ def _server() -> Any:
 
         return MCPServer("addon-auditor", version=__version__, instructions=INSTRUCTIONS)
     except ImportError:
-        from mcp.server.fastmcp import FastMCP  # mcp < 2
+        from mcp.server.fastmcp import FastMCP  # type: ignore[attr-defined]  # mcp < 2
 
         return FastMCP("addon-auditor", instructions=INSTRUCTIONS)
 
