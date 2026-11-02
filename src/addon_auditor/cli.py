@@ -1,4 +1,5 @@
-"""Command line interface: ``addon-auditor audit|diff|explain|rules|baseline|api|probe-ingest|learn``."""
+"""Command line interface: ``addon-auditor audit|diff|explain|rules|baseline|api|luacheckrc|memory-hints|
+probe-ingest|learn``."""
 
 from __future__ import annotations
 
@@ -69,6 +70,10 @@ def main(argv: list[str] | None = None) -> int:
     p_api = sub.add_parser("api", help="check whether an API symbol exists per client")
     p_api.add_argument("symbol")
 
+    p_mem = sub.add_parser("memory-hints", help="recall queries + ingest-ready lessons for a memory service")
+    p_mem.add_argument("path", nargs="?", default=".", type=Path)
+    p_mem.add_argument("--report", type=Path, help="reuse a JSON audit report instead of re-auditing")
+
     p_rc = sub.add_parser("luacheckrc", help="print (or write) a compact .luacheckrc tailored to the addon")
     p_rc.add_argument("path", nargs="?", default=".", type=Path)
     p_rc.add_argument("--write", action="store_true", help="write <addon>/.luacheckrc (refuses to overwrite)")
@@ -137,6 +142,13 @@ def main(argv: list[str] | None = None) -> int:
         from .adapters.api_index import ApiIndex
 
         print(json.dumps(ApiIndex.for_profiles(set()).lookup(args.symbol), indent=2))
+        return 0
+
+    if args.cmd == "memory-hints":
+        from .mcp.tools import memory_hints
+
+        report = json.loads(args.report.read_text(encoding="utf-8")) if args.report else None
+        print(json.dumps(memory_hints(str(args.path), report), indent=2, ensure_ascii=False))
         return 0
 
     if args.cmd == "luacheckrc":

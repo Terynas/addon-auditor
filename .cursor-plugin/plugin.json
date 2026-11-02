@@ -1,0 +1,14 @@
+{
+  "name": "addon-auditor",
+  "displayName": "Addon Auditor",
+  "version": "0.1.0",
+  "description": "Deterministic World of Warcraft addon auditor for coding agents: luacheck, TOC, API existence per client, performance, taint/security, SavedVariables, usability, packaging, runtime probe data.",
+  "author": {
+    "name": "Terynas"
+  },
+  "license": "MIT",
+  "repository": "https://github.com/Terynas/addon-auditor",
+  "keywords": ["wow", "world-of-warcraft", "addons", "lua", "luacheck", "audit", "performance", "mcp"],
+  "skills": "skills/",
+  "mcpServers": "mcp.json"
+}

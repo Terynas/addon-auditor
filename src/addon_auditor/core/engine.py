@@ -75,6 +75,7 @@ class AuditResult:
             "baselined": self.baselined,
             "known_false_positives": self.known_false_positives,
             "suppressed": len(self.suppressed),
+            "suppressed_detail": self.suppressed[:50],
             "rules_run": self.rules_run,
             "duration_ms": self.duration_ms,
             "notes": self.notes,

@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "addon-auditor": {
+      "command": "${CURSOR_PLUGIN_ROOT}/.venv/bin/addon-auditor-mcp",
+      "args": [],
+      "env": {}
+    }
+  }
+}
