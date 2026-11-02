@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Refuse commits whose author or committer is a tooling identity.
+set -euo pipefail
+pattern='cursor|cursoragent|claude|copilot|chatgpt|codex|openai|anthropic'
+for who in GIT_AUTHOR_IDENT GIT_COMMITTER_IDENT; do
+  ident="$(git var "$who")"
+  if echo "$ident" | grep -Eiq "$pattern"; then
+    echo "pre-commit: $who is not allowed ($ident). Commit as Terynas instead." >&2
+    exit 1
+  fi
+done

@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# Strip disallowed tooling trailers from commit messages.
+set -euo pipefail
+msg_file="$1"
+
+python3 - "$msg_file" <<'PY'
+import re, sys
+path = sys.argv[1]
+text = open(path, encoding="utf-8").read()
+tool = r"(cursor|cursoragent|cursor[- ]agent|ai agent|claude|copilot|chatgpt|codex|gpt-?\d*)"
+trailer = re.compile(
+    r"^\s*(co-authored-by|generated-by|attributed-to|assisted-by|made-with|signed-off-by)\s*:.*" + tool + r".*$",
+    re.IGNORECASE,
+)
+promo = re.compile(r"^.*(generated|made|written|created) (with|by|using) .*" + tool + r".*$", re.IGNORECASE)
+original = text.splitlines()
+lines = [l for l in original if not trailer.match(l) and not promo.match(l)]
+removed = len(original) - len(lines)
+if removed:
+    cleaned = re.sub(r"\n{3,}", "\n\n", "\n".join(lines)).rstrip() + "\n"
+    open(path, "w", encoding="utf-8").write(cleaned)
+    print(f"commit-msg: removed {removed} disallowed trailer line(s):", file=sys.stderr)
+    for l in original:
+        if trailer.match(l) or promo.match(l):
+            print(f"  - {l.strip()}", file=sys.stderr)
+PY
+
+if ! grep -q '[^[:space:]]' "$msg_file"; then
+  echo "commit-msg: commit message is empty after cleanup; aborting." >&2
+  exit 1
+fi

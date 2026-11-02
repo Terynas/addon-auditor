@@ -1,0 +1,55 @@
+[build-system]
+requires = ["hatchling>=1.24"]
+build-backend = "hatchling.build"
+
+[project]
+name = "addon-auditor"
+version = "0.1.0"
+description = "Agent-first static + runtime auditor for World of Warcraft addons: luacheck, TOC, API existence, performance, taint/security, SavedVariables, usability, packaging."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.11"
+authors = [{ name = "Terynas" }]
+keywords = ["wow", "world-of-warcraft", "addons", "lua", "lint", "audit", "mcp", "ai-agents"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Topic :: Software Development :: Quality Assurance",
+  "Environment :: Console",
+]
+dependencies = []
+
+[project.optional-dependencies]
+mcp = ["mcp>=1.2.0"]
+dev = ["pytest>=8", "ruff>=0.6", "mypy>=1.10"]
+
+[project.scripts]
+addon-auditor = "addon_auditor.cli:main"
+addon-auditor-mcp = "addon_auditor.mcp.server:main"
+
+[project.urls]
+Homepage = "https://github.com/Terynas/addon-auditor"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/addon_auditor"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"rules-docs" = "addon_auditor/rules_docs"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.11"
+files = ["src/addon_auditor"]
+ignore_missing_imports = true
+check_untyped_defs = true

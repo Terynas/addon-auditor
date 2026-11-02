@@ -1,0 +1,9 @@
+---
+description: addon-auditor repo contract and how to use the auditor while writing WoW addons
+alwaysApply: true
+---
+
+Follow `AGENTS.md`. When auditing or writing WoW addon code, follow `skills/addon-auditor/SKILL.md`:
+run `audit_changes` after each edit batch, full `audit_addon` before finishing, and record lessons in Hindsight.
+
+Never push. Never add agent attribution trailers.
