@@ -1,0 +1,5 @@
+local f = CreateFrame("Frame")
+f:RegisterEvent("PLAYER_MONEY")
+f:SetScript("OnEvent", function()
+  print(GetCoinTextureString(GetMoney()))
+end)
