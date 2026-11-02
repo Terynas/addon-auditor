@@ -1,7 +1,8 @@
 """Every registered rule needs docs plus a firing ``bad`` fixture and a quiet ``good`` fixture.
 
 Layout: ``tests/fixtures/<category>/<RULE_ID>/{bad,good}/`` -- each is a tiny addon folder with a .toc.
-Rules that need runtime data read ``probe.lua`` (AuditorProbe SavedVariables) from the fixture folder.
+When the addon name matters, use ``bad/MyAddon/MyAddon.toc`` instead.
+Rules that need runtime data read ``probe.lua`` (AuditorProbe SavedVariables) from ``bad/`` or ``good/``.
 """
 
 from __future__ import annotations
@@ -23,8 +24,18 @@ RULE_IDS = sorted(RULES)
 SPECIAL = {"META001"}
 
 
+def _addon_dir(folder: Path) -> Path:
+    """``bad/`` may itself be the addon, or hold exactly one addon folder (``bad/MyAddon/MyAddon.toc``)."""
+    if any(folder.glob("*.toc")):
+        return folder
+    subs = [d for d in folder.iterdir() if d.is_dir() and any(d.glob("*.toc"))]
+    assert len(subs) == 1, f"{folder}: expected a .toc or exactly one addon sub-folder"
+    return subs[0]
+
+
 def _audit(folder: Path, rule_id: str):  # type: ignore[no-untyped-def]
     probe = folder / "probe.lua"
+    folder = _addon_dir(folder)
     opts = AuditOptions(rule_ids=[rule_id], use_baseline=False, min_severity="info",
                         probe_path=probe if probe.is_file() else None)
     return run_audit(folder, opts)
