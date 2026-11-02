@@ -437,7 +437,7 @@ def _hot(ctx: AuditContext) -> dict[int, _Hot]:
     for _f, _owner, fn in _onupdate_handlers(ctx):
         hot[id(fn)] = _Hot(fn, "OnUpdate handler (runs every frame)", "frame", frozenset(),
                            frozenset(_elapsed_seed(fn, True)))
-    for fn, evs, _f in _event_fns(ctx).values():
+    for fn, evs, _ef in _event_fns(ctx).values():
         freq = evs & _hot_events(ctx)
         if freq and id(fn) not in hot:
             hot[id(fn)] = _Hot(fn, f"handler for frequent event {sorted(freq)[0]}", "event", frozenset(evs),
@@ -445,8 +445,8 @@ def _hot(ctx: AuditContext) -> dict[int, _Hot]:
     ctx._perf_hot = hot  # type: ignore[attr-defined]
     # One level of direct callees, only from call sites that are themselves hot.
     for h in list(hot.values()):
-        lf = _file_of(ctx, h.fn)
-        if lf is None:
+        src = _file_of(ctx, h.fn)
+        if src is None:
             continue
         for node in _direct_nodes(h.fn):
             if node.kind != "Call":
@@ -454,14 +454,14 @@ def _hot(ctx: AuditContext) -> dict[int, _Hot]:
             reason = _hot_at(ctx, h, node)
             if reason is None:
                 continue
-            callee = resolve_function(ctx, lf, node.func)
+            callee = resolve_function(ctx, src, node.func)
             if callee is None or id(callee) in hot:
                 continue
-            evs = frozenset()
+            callee_evs: frozenset[str] = frozenset()
             if h.kind == "event":
                 br = _branch_events(node, h.fn)
-                evs = frozenset((br & h.events if h.events else br) if br is not None else h.events)
-            hot[id(callee)] = _Hot(callee, f"called from {reason}", h.kind, evs,
+                callee_evs = frozenset((br & h.events if h.events else br) if br is not None else h.events)
+            hot[id(callee)] = _Hot(callee, f"called from {reason}", h.kind, callee_evs,
                                    frozenset(_elapsed_seed(callee, False)))
     return hot
 
@@ -1044,6 +1044,7 @@ def unit_event_filter(ctx: AuditContext, emit: Emit) -> None:
         ok = True
         for fn in handlers:
             filt = _unit_filters(fn)
+            got: set[str] | None
             if None in filt:
                 got = filt[None]
             elif "!" + ev in filt:
@@ -1387,8 +1388,8 @@ def addon_message_flood(ctx: AuditContext, lf: LuaFile, emit: Emit) -> None:
         hot = _site_hot(ctx, node)
         if hot is not None and hot[0].kind == "frame":
             where = _describe(hot[0].fn, hot[1])
-        elif fn is not None and id(fn) in tickers and tickers[id(fn)][1] is not None and tickers[id(fn)][1] < 1:
-            where = f"a {tickers[id(fn)][1]}s ticker"
+        elif fn is not None and id(fn) in tickers and (period := tickers[id(fn)][1]) is not None and period < 1:
+            where = f"a {period}s ticker"
         elif _in_loop_body(node) is not None:
             where = "a loop"
         if where is None:

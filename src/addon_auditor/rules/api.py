@@ -128,10 +128,10 @@ def _file_profiles(ctx: AuditContext, lf: LuaFile) -> set[str]:
                     profs = (profs & mapped) or mapped
                 add(entry.path.replace("\\", "/").lstrip("./"), profs)
         ctx._api_file_profiles = cache  # type: ignore[attr-defined]
-    profs = cache.get(lf.rel)
-    if not profs:
+    file_profs = cache.get(lf.rel)
+    if not file_profs:
         return set(ctx.profiles)
-    return (profs & set(ctx.profiles)) or set(ctx.profiles)
+    return (file_profs & set(ctx.profiles)) or set(ctx.profiles)
 
 
 def _covered(ctx: AuditContext, lf: LuaFile) -> tuple[list[str], list[str]]:

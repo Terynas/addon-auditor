@@ -257,9 +257,9 @@ def _file_frames(ctx: AuditContext, lf: LuaFile) -> list[_Frame]:
     for node in lf.ast.walk():
         if node.kind == "Method":
             k = _key(node.obj)
-            rec = by_key.get(k) if k else None
-            if rec is not None:
-                rec.methods.append(node)
+            owner = by_key.get(k) if k else None
+            if owner is not None:
+                owner.methods.append(node)
         elif node.kind in ("Call", "Return", "Assign", "Table"):
             _track_escape(ctx, lf, node, by_key)
         if node.kind in ("Call", "Method"):
