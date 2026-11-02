@@ -36,3 +36,5 @@ Deterministic analysis engine for World of Warcraft addons (WoW Forever `16001`,
 ## Memory
 
 This repo uses Hindsight for durable decisions (rule thresholds, resolved conflicts like `UICheckButtonTemplate`). Search it before changing a rule's severity or threshold; ingest the decision after.
+
+For agents *using* the auditor, memory is optional and provider-neutral: `memory_hints` (MCP) / `addon-auditor memory-hints` (CLI) returns `search_queries` to run before auditing and an ingest-ready `lessons_markdown` when `ingest_recommended` is true. Without a memory service, `record_learning` / `addon-auditor learn` writes `<addon>/.addon-auditor/learnings.jsonl`, which the engine reads on every audit (a `false_positive` verdict downgrades matching findings to `info` and keeps them out of the gate).
