@@ -486,6 +486,7 @@ def forever_protected(ctx: AuditContext, lf: LuaFile, emit: Emit) -> None:
         if name in _TARGETING:
             emit(node.line, f"`{name}()` is protected: addon code cannot change the target (blocked with an "
                             "'Interface action failed' popup on Forever)", col=node.col,
+                 tags=[f"symbol:{name}"],
                  fix_hint="Use a SecureActionButtonTemplate button with `type=target` / a `/target` macro the "
                           "player clicks; do not automate targeting.")
         elif name in _CHAT_OPEN:

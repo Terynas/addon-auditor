@@ -121,9 +121,32 @@ def undefined_global(ctx: AuditContext, emit: Emit) -> None:
       "Assigning a global the addon did not intend to export. Globals leak into the shared environment, "
       "collide with other addons and are slower than locals.", scope="addon", tags=("performance",))
 def accidental_global(ctx: AuditContext, emit: Emit) -> None:
-    _emit_codes(ctx, emit, lambda c: c in ("W111", "W112"),
-                lambda i: "Add `local` to the declaration, or keep exported state on one prefixed namespace "
-                          "table (e.g. `MyAddon = MyAddon or {}`).")
+    hint = ("Add `local` to the declaration, or keep exported state on one prefixed namespace "
+            "table (e.g. `MyAddon = MyAddon or {}`).")
+    if getattr(ctx, "run_luacheck", True) and not _luacheck_result(ctx).available:
+        _builtin_global_writes(ctx, emit, hint)
+        return
+    _emit_codes(ctx, emit, lambda c: c in ("W111", "W112"), lambda i: hint)
+
+
+def _builtin_global_writes(ctx: AuditContext, emit: Emit, hint: str) -> None:
+    """Fallback when luacheck is not installed: global assignments found by the scope resolver."""
+    from ..core.builtins import ALWAYS_KNOWN
+
+    allowed = set(allowed_globals(ctx)) | set(luacheck.WRITABLE_CLIENT_GLOBALS) | set(ALWAYS_KNOWN)
+    seen: set[str] = set()
+    for lf in ctx.parsed_files():
+        assert lf.ast is not None
+        for node in lf.ast.walk():
+            if node.kind != "Name" or not node.a.get("is_global") or not node.a.get("is_write"):
+                continue
+            name = node.id
+            if name in allowed or name in seen or any(ctx.api.global_in(name).values()):
+                continue
+            seen.add(name)
+            emit(node.line, f"setting non-standard global variable '{name}' (built-in check; install luacheck "
+                            "for full lint)", file=lf.rel, col=node.col, confidence="medium",
+                 tags=[f"symbol:{name}"], fix_hint=hint)
 
 
 @rule("LINT004", "lint", "error", "Overwriting a read-only (Blizzard) global",

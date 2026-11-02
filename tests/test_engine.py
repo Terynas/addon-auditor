@@ -71,3 +71,17 @@ def test_baseline_hides_known_findings(tmp_path: Path) -> None:
 def test_cli_rules_lists(capsys) -> None:  # type: ignore[no-untyped-def]
     assert main(["rules"]) == 0
     assert "LINT001" in capsys.readouterr().out
+
+
+def test_accidental_global_fallback_without_luacheck(tmp_path, monkeypatch) -> None:  # type: ignore[no-untyped-def]
+    from addon_auditor.adapters import luacheck
+    from addon_auditor.core.engine import AuditOptions, run_audit
+
+    root = tmp_path / "Leaky"
+    root.mkdir()
+    (root / "Leaky.toc").write_text("## Interface: 16001\n## SavedVariables: LeakyDB\n\ncore.lua\n", encoding="utf-8")
+    (root / "core.lua").write_text("LeakyDB = LeakyDB or {}\nlocal function F()\n  oops = 1\nend\nF()\n",
+                                   encoding="utf-8")
+    monkeypatch.setattr(luacheck, "find_luacheck", lambda start=None: None)
+    res = run_audit(root, AuditOptions(rule_ids=["LINT003"], use_baseline=False, min_severity="info"))
+    assert [(f.line, f.confidence) for f in res.findings] == [(3, "medium")]
