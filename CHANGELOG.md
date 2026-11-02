@@ -10,7 +10,7 @@ All notable changes to this project are documented here. Format: [Keep a Changel
 - Engine: built-in Lua 5.1 parser and scope resolver, TOC parser, ranked findings with severity, confidence and fix hints, per-category scores and a pass/fail gate, diff mode (git ref or file list), baselines, inline suppressions with mandatory reasons, and `.addon-auditor.toml` configuration.
 - Reports in Markdown, JSON and SARIF 2.1.0.
 - CLI `addon-auditor` with these commands: `audit`, `diff`, `explain`, `rules`, `api`, `baseline`, `learn`, `luacheckrc` (writes a compact per-addon `.luacheckrc`), `memory-hints` and `probe-ingest`.
-- Rule packs, 82 rules in all, each with a documentation page and good/bad fixtures:
+- Rule packs, 87 rules in all, each with a documentation page and good/bad fixtures:
   - **LINT001–LINT009**: luacheck integration, with a built-in accidental-global check when luacheck is not installed.
   - **TOC001–TOC013**: TOC checks.
   - **API001–API009**: per-client API existence, deprecations and Forever restrictions.
