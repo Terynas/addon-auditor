@@ -1,0 +1,5 @@
+local f = CreateFrame("Frame")
+f:RegisterEvent("CHAT_MSG_WHISPER")
+f:SetScript("OnEvent", function(self, event, text, sender)
+  SendChatMessage("I am AFK", "WHISPER", nil, sender)
+end)

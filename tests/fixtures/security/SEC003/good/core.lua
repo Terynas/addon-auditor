@@ -1,0 +1,5 @@
+GameTooltip:HookScript("OnShow", function(self)
+  self:AddLine("MyAddon was here")
+end)
+local own = CreateFrame("Frame", "MyAddonFrame", UIParent)
+own:SetScript("OnShow", function() end)

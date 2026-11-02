@@ -1,0 +1,8 @@
+local btn = CreateFrame("Button", "MyAddonTargetButton", UIParent, "SecureActionButtonTemplate")
+btn:SetAttribute("type", "target")
+local f = CreateFrame("Frame")
+f:RegisterEvent("GROUP_ROSTER_UPDATE")
+f:SetScript("OnEvent", function()
+  btn:SetAttribute("unit", "party1")
+  btn:Show()
+end)

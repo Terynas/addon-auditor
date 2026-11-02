@@ -1,0 +1,7 @@
+## Interface: 16001, 120107
+## Title: MyAddon
+## Notes: auditor fixture
+## Version: 1.0
+## SavedVariablesPerCharacter: MyAddonCharDB
+
+core.lua
