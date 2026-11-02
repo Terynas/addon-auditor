@@ -13,6 +13,7 @@ from .lua_ast import Comment, LuaSyntaxError, Node, parse
 from .toc import Toc, parse_toc
 
 XML_SCRIPT = re.compile(r"<Script\b[^>]*\bfile\s*=\s*\"([^\"]+)\"", re.I)
+_LINE_COMMENT = re.compile(r"--(?!\[=*\[)(.*)$")
 XML_INCLUDE = re.compile(r"<Include\b[^>]*\bfile\s*=\s*\"([^\"]+)\"", re.I)
 
 
@@ -178,6 +179,8 @@ class AuditContext:
             ast, comments = parse(src)
         except LuaSyntaxError as e:
             err = e
+            comments = [Comment(m.group(1), i, i) for i, text in enumerate(lines, start=1)
+                        if (m := _LINE_COMMENT.search(text))]
         lf = LuaFile(path, rel, src, lines, ast, comments, err, loaded)
         lf.suppressions = suppress.collect(comments, lines)
         self.files[rel] = lf
